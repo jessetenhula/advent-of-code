@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define WIDTH 141
+#define WIDTH 140
 
 /*
 Advent of Code 2024 Day 4
 */
 
-int readFileIntoMatrix(char matrix[][141], char* fileName);
-int writeMatrixToFileDiagonal(char matrix[][141], char* fileName);
-int writeMatrixToFileDiagonalVertical(char matrix[][141], char* fileName);
+int readFileIntoMatrix(char matrix[][WIDTH], char* fileName);
 
-int searchMatrix(char* keyWord, int keyWordLength, char matrix[][141], int verticalSearch);
-int searchMatrixDiagonal(char* keyWord, int keyWordLength, char matrix[][141], int verticalSearch);
+int searchMatrix(char* keyWord, int keyWordLength, char matrix[][WIDTH], int verticalSearch);
+int searchMatrixDiagonal(char* keyWord, int keyWordLength, char matrix[][WIDTH], int verticalSearch);
+int searchMasX(char matrix[][WIDTH]);
 
 int charIsInWord(char* word, char* compareWord, char ch, int index, int length);
 void clearWord(char* word, int length);
@@ -31,7 +30,7 @@ int main()
         total += searchMatrixDiagonal("SAMX", 5, puzzle, perpendicular);
     }
 
-    printf("\nPart 1 total XMAS count: %d", total);
+    printf("Part 1 total XMAS count: %d", total);
     printf("\nPart 2 total X-MAS count: %d", searchMasX(puzzle));
 
     return 0;
@@ -88,6 +87,8 @@ int searchMatrix(char* keyWord, int keyWordLength, char matrix[][WIDTH], int per
                 result++;
             }
         }
+        count = 0;
+        clearWord(keyWordTemp, keyWordLength);
     }
 
     return result;
@@ -120,6 +121,8 @@ int searchMatrixDiagonal(char* keyWord, int keyWordLength, char matrix[][WIDTH],
                     result++;
                 }
             }
+            count = 0;
+            clearWord(keyWordTemp, keyWordLength);
         }
 
         for(int x = 0; x < WIDTH; x++) {
@@ -140,6 +143,8 @@ int searchMatrixDiagonal(char* keyWord, int keyWordLength, char matrix[][WIDTH],
                     result++;
                 }
             }
+            count = 0;
+            clearWord(keyWordTemp, keyWordLength);
         }
     } else { //PERPENDICULAR DIAGONAL SEARCH
         for(int x = 0; x < WIDTH; x++) {
@@ -201,15 +206,13 @@ int readFileIntoMatrix(char matrix[][WIDTH], char* fileName)
     }
 
     char ch = ' ';
-    for(int x = 0; x < WIDTH -1; x++) {
-        for(int y = 0; y < WIDTH; y++) {
+    for(int x = 0; x < WIDTH; x++) {
+        for(int y = 0; y < WIDTH + 1; y++) {
             ch = getc(input);
-            matrix[x][y] = ch;
+            if(ch != '\n') {
+                matrix[x][y] = ch;
+            }
         }
-    }
-
-    for(int y = 0; y < WIDTH; y++) {
-        matrix[WIDTH -1][y] = '\n';
     }
 
     fclose(input);
